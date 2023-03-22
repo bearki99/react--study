@@ -1,0 +1,4 @@
+#  JSX
+我们通常会使用类似于书写html的语句对React的元素进行构建，这种语句通常叫做JSX，JSX对于创建不是必须的
+
+通常JSX写完后，真正编译的时候通过React.createElement去进行真实的构建
