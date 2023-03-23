@@ -1,4 +1,6 @@
 #  JSX
 我们通常会使用类似于书写html的语句对React的元素进行构建，这种语句通常叫做JSX，JSX对于创建不是必须的
 
-通常JSX写完后，真正编译的时候通过React.createElement去进行真实的构建
+通常JSX写完后，真正编译的时候通过React.createElement去进行真实的构建，生成一个对象，是React Element
+
+虚拟DOM究竟是谁？Fiber，根据React Element的描述组件内容生成的Fiber

@@ -1,9 +1,9 @@
 #  Fiber
 Fiber实际上就是React中的虚拟DOM  
 
-React15以前，Reconciler采用深度优先遍历创建虚拟DOM，递归的过程不可中断，如果组件的层级很深，会导致占用线程时间很长，在用户的界面看起来就会有一大片空白，很卡顿
+React16以前，Reconciler采用深度优先遍历创建虚拟DOM，递归的过程不可中断，如果组件的层级很深，会导致占用线程时间很长，在用户的界面看起来就会有一大片空白，很卡顿
 
-React16以后，将递归的不可中断的更新变成异步的可中断更新，并在React18时提出concurrent，这些实现与Fiber架构是离不开的
+React16以后，将递归的不可中断的更新变成**异步**的可中断更新，并在React18时正式提出concurrent，这些实现与Fiber架构是离不开的
 
 FiberNode具体到底长什么样子？
 https://github.com/facebook/react/blob/1fb18e22ae66fdb1dc127347e169e73948778e5a/packages/react-reconciler/src/ReactFiber.new.js#L117
@@ -61,11 +61,11 @@ function FiberNode(tag: Worktag, pendingProps: mixed, key: null | string, mode: 
 currentFiber.alternate = workInProgressFiber;
 workInProgressFiber.alternate = currentFiber;
 ```
-二者的切换通过current指针在不同的Fiber tree之间进行切换
+二者的切换通过current指针在不同的Fiber tree之间进行切换，最后Renderer的时候根据placement进行更新
 
 ##  组件创建
 ReactDOM.render()  
-会先创建fiberRootNode（根Fiber）和rootFiber（所在组件树的根节点）
+会先创建rootFiberNode（根Fiber）和rootFiber（所在组件树的根节点）
 
 ##  如何创建Fiber Tree
 递归的过程
@@ -78,3 +78,7 @@ ReactDOM.render()
 beginWork:
 - current: 当前组件对应的fiber节点在上一次更新时的Fiber节点
 - workInProgress：当前组件对应的Fiber节点
+
+beginWork-会根据传入的Fiber节点创建子Fiber节点，并把这两个Fiber节点连起来，当遍历到叶子节点的时候会进入到归阶段
+
+completeWork - 当某个节点执行完completeWork，如果其存在兄弟Fiber节点，会进入到它兄弟Fiber节点的递阶段，如果不存在，就进入到父节点的归阶段
