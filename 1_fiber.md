@@ -19,7 +19,9 @@ https://github.com/facebook/react/blob/1fb18e22ae66fdb1dc127347e169e73948778e5a/
 
 ```javascript
 function FiberNode(
+  // 是什么类型的节点 FunctionComponent / HostRoot / HostComponent / HostText
   tag: Worktag,
+  // 之后有哪些props需要改变
   pendingProps: mixed,
   key: null | string,
   mode: TypeOfMode
@@ -29,20 +31,23 @@ function FiberNode(
   this.tag = tag;
   this.key = key;
   this.elementType = null;
+  // FunctionComponent () => {}
   this.type = null;
-  // Fiber对应的真实DOM节点
+  // Fiber对应的真实DOM节点，<div>
   this.stateNode = null;
 
   // 实际上Fiber是一个链表
   this.return = null;
   this.child = null;
   this.sibling = null;
-
+  //如果ul下有多个li，不同的index 
   this.index = 0;
   this.ref = null;
 
   // 作为动态工作单元的一些属性
+  //刚开始工作时候的props
   this.pendingProps = pendingProps;
+  //工作完了的props
   this.memoizedProps = null;
   this.updateQueue = null;
   this.memoizedState = null;
@@ -63,6 +68,7 @@ function FiberNode(
 
   // 指向该fiber在另一次更新时对应的fiber，React中有一个双缓存机制，current和workInProgress是相互交替更新的，用alternate去进行更新
   this.alternate = null;
+  this.flags = null;
 }
 ```
 
@@ -87,6 +93,10 @@ ReactDOM.render()
 会先创建 rootFiberNode（根 Fiber）和 rootFiber（所在组件树的根节点）
 
 ## 如何创建 Fiber Tree
+怎么去调用renderRoot？
+- ReactDOM.createRoot().render
+- this.setState
+- useState的dispatch方法
 
 递归的过程
 
@@ -103,3 +113,7 @@ beginWork:
 beginWork-会根据传入的 Fiber 节点创建子 Fiber 节点，并把这两个 Fiber 节点连起来，当遍历到叶子节点的时候会进入到归阶段
 
 completeWork - 当某个节点执行完 completeWork，如果其存在兄弟 Fiber 节点，会进入到它兄弟 Fiber 节点的递阶段，如果不存在，就进入到父节点的归阶段
+
+
+#  更新机制
+update数据结构
